@@ -35,6 +35,9 @@ export interface ConfigManifestEntryEnum extends ConfigManifestEntryBase {
 }
 export interface ConfigManifestEntryTable extends ConfigManifestEntryBase {
     type: ConfigManifestEntryType.TABLE;
-    columns: BasicConfigManifestEntry[];
+    columns: Array<BasicConfigManifestEntry & {
+        /** Column rank (left to right, lowest to highest) */
+        rank: number;
+    }>;
     defaultVal: TableConfigItemValue;
 }
