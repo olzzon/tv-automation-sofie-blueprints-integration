@@ -7,5 +7,8 @@ var ConfigManifestEntryType;
     ConfigManifestEntryType["BOOLEAN"] = "boolean";
     ConfigManifestEntryType["ENUM"] = "enum";
     ConfigManifestEntryType["TABLE"] = "table";
+    ConfigManifestEntryType["SELECT"] = "select";
+    ConfigManifestEntryType["SOURCE_LAYERS"] = "source_layers";
+    ConfigManifestEntryType["LAYER_MAPPINGS"] = "layer_mappings";
 })(ConfigManifestEntryType = exports.ConfigManifestEntryType || (exports.ConfigManifestEntryType = {}));
 //# sourceMappingURL=config.js.map

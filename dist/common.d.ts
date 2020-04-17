@@ -8,4 +8,4 @@ export declare type TableConfigItemValue = Array<{
     _id: string;
     [key: string]: BasicConfigItemValue;
 }>;
-export declare type BasicConfigItemValue = string | number | boolean;
+export declare type BasicConfigItemValue = string | number | boolean | string[];
