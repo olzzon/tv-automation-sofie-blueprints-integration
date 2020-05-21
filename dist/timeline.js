@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const timeline_state_resolver_types_1 = require("timeline-state-resolver-types");
+const TSR = require("timeline-state-resolver-types");
+exports.TSR = TSR;
+var timeline_state_resolver_types_1 = require("timeline-state-resolver-types");
 exports.Timeline = timeline_state_resolver_types_1.Timeline;
 var PlayoutTimelinePrefixes;
 (function (PlayoutTimelinePrefixes) {

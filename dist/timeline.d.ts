@@ -1,6 +1,7 @@
 import { IBlueprintPartDB, IBlueprintPiece } from './rundown';
-import { Timeline, TSRTimelineObjBase } from 'timeline-state-resolver-types';
-export { Timeline };
+import * as TSR from 'timeline-state-resolver-types';
+export { TSR };
+export { Timeline } from 'timeline-state-resolver-types';
 export declare enum PlayoutTimelinePrefixes {
     PART_GROUP_PREFIX = "part_group_",
     PART_GROUP_FIRST_ITEM_PREFIX = "part_group_firstobject_",
@@ -16,7 +17,7 @@ export declare enum TimelineObjHoldMode {
     ONLY = 1,
     EXCEPT = 2
 }
-export interface TimelineObjectCoreExt extends TSRTimelineObjBase {
+export interface TimelineObjectCoreExt extends TSR.TSRTimelineObjBase {
     /** Restrict object usage according to whether we are currently in a hold */
     holdMode?: TimelineObjHoldMode;
     /** Arbitrary data storage for plugins */
