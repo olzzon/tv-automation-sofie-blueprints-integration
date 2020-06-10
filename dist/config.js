@@ -10,5 +10,6 @@ var ConfigManifestEntryType;
     ConfigManifestEntryType["SELECT"] = "select";
     ConfigManifestEntryType["SOURCE_LAYERS"] = "source_layers";
     ConfigManifestEntryType["LAYER_MAPPINGS"] = "layer_mappings";
+    ConfigManifestEntryType["JSON"] = "json";
 })(ConfigManifestEntryType = exports.ConfigManifestEntryType || (exports.ConfigManifestEntryType = {}));
 //# sourceMappingURL=config.js.map
