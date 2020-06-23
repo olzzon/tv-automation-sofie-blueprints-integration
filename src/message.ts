@@ -1,8 +1,16 @@
 import { Time } from './common'
 
 export interface IBlueprintExternalMessageQueueObj {
+	/** If set, the message references an existing message (that is to be overrritten) */
+	_id?: string
+
 	/** Type of message */
 	type: IBlueprintExternalMessageQueueType
+	/**
+	 * If set, the message won't be sent automatically.
+	 * Contains the reason for why the message was queued and not sent.
+	 */
+	queueForLaterReason?: string
 	/** Receiver details */
 	receiver: any
 	/** Messate details */
@@ -13,7 +21,7 @@ export interface IBlueprintExternalMessageQueueObj {
 export enum IBlueprintExternalMessageQueueType {
 	SOAP = 'soap',
 	SLACK = 'slack',
-	RABBIT_MQ = 'rabbitmq'
+	RABBIT_MQ = 'rabbitmq',
 }
 export interface ExternalMessageQueueObjSOAP extends IBlueprintExternalMessageQueueObj {
 	type: IBlueprintExternalMessageQueueType.SOAP

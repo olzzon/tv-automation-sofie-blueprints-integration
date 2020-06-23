@@ -17,7 +17,7 @@ export enum SourceLayerType {
 	LIVE_SPEAK = 11,
 	MIC = 12,
 	TRANSITION = 13,
-	LIGHTS = 14
+	LIGHTS = 14,
 }
 
 export interface MetadataElement {
@@ -74,6 +74,7 @@ export interface VTContent extends BaseContent {
 	mediaFlowIds?: string[]
 	seek?: number
 	editable?: VTEditableParameters
+	ignoreMediaObjectStatus?: boolean
 }
 
 export interface CameraContent extends BaseContent {
@@ -152,7 +153,7 @@ export type SplitsContentBoxContent = Omit<
 >
 export interface SplitsContent extends BaseContent {
 	/** Array of contents, 0 is towards the rear */
-	boxSourceConfiguration: Array<SplitsContentBoxContent & SplitsContentBoxProperties>
+	boxSourceConfiguration: (SplitsContentBoxContent & SplitsContentBoxProperties)[]
 	timelineObjects: TimelineObjectCoreExt[]
 }
 

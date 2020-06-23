@@ -1,16 +1,22 @@
+import { DeviceType as TSR_DeviceType, ExpectedPlayoutItemContentVizMSE } from 'timeline-state-resolver-types'
 import { Time } from './common'
 import { SomeContent } from './content'
-import { Omit } from './lib'
 import { Timeline } from './timeline'
 
 export interface IBlueprintRundownPlaylistInfo {
+	/** Rundown playlist slug - user-presentable name */
 	name: string
 
 	externalId: string
 
+	/** Expected start should be set to the expected time this rundown playlist should run on air */
 	expectedStart?: Time
-
+	/** Expected duration of the rundown playlist */
 	expectedDuration?: number
+	/** Should the rundown playlist use out-of-order timing mode (unplayed content will be played eventually) as opposed to normal timing mode (unplayed content behind the OnAir line has been skipped) */
+	outOfOrderTiming?: boolean
+	/** Should the rundown playlist loop at the end */
+	loop?: boolean
 }
 
 /** The Rundown generated from Blueprint */
@@ -101,11 +107,6 @@ export interface IBlueprintPart {
 	/** Expected duration of the line, in milliseconds */
 	expectedDuration?: number
 
-	/** The type of the segmentLiene, could be the name of the template that created it */
-	typeVariant: string
-	/** The subtype fo the part */
-	subTypeVariant?: string
-
 	/** Whether this segment line supports being used in HOLD */
 	holdMode?: PartHoldMode
 
@@ -120,11 +121,49 @@ export interface IBlueprintPart {
 	displayDurationGroup?: string
 	displayDuration?: number
 
-	/** When something bad has happened, we can mark the part as invalid, which will prevent the user from TAKE:ing it */
+	/**
+	 * When something bad has happened, we can mark the part as invalid, which will prevent the user from TAKEing it.
+	 * Situations where a part can be marked as invalid include:
+	 *  - part could not be handled by the blueprint, but NRCS would expect it to exist in Rundown (f.g. no part type in ENPS)
+	 *  - part was handled by the blueprint, but blueprint could not produce a playable result (f.g. the part is a VT clip, but no clip information was present in NRCS)
+	 *  - part was handled by the blueprint, but business logic prevents it from being played (f.g. the part has been marked as "Not approved" by the editor)
+	 *  - there is another issue preventing the part from being playable, but the user expects it to be there
+	 *
+	 * Invalid means that in Sofie:
+	 * * The Part is not playable
+	 * * The Part is displayed in the Rundown GUI (as invalid)
+	 * * The Part is still used in timing calculations as normal
+	 * * The Part is still showed in prompter, etc, as normal
+	 * * The Part has Adlibs that are playable
+	 * * Infinites still works as normal
+	 */
 	invalid?: boolean
+	/**
+	 * Provide additional information about the reason a part is invalid. The title should be a single, short sentence describing the reason. Additional
+	 * information can be provided in the description property. The blueprints can also provide a color hint that the UI can use when displaying the part.
+	 * Color needs to be in #xxxxxx RGB hexadecimal format.
+	 *
+	 * @type {{
+	 * 		title: string,
+	 * 		description?: string
+	 * 		color?: string
+	 * 	}}
+	 * @memberof IBlueprintPart
+	 */
+	invalidReason?: {
+		title: string
+		description?: string
+		color?: string
+	}
+
+	/** When the NRCS informs us that the producer marked the part as floated, we can prevent the user from TAKE'ing and NEXT'ing it, but still have it visible and allow manipulation */
+	floated?: boolean
 
 	/** When this part is just a filler to fill space in a segment. Generally, used with invalid: true */
 	gap?: boolean
+
+	/** User-facing identifier that can be used by the User to identify the contents of a segment in the Rundown source system */
+	identifier?: string
 
 	/** Whether queued adlibs can be combined into this part. Usually set by core. */
 	canCombineQueue?: boolean
@@ -137,6 +176,17 @@ export interface IBlueprintPartDB extends IBlueprintPart {
 
 	/** Playout timings, in here we log times when playout happens */
 	timings?: IBlueprintPartDBTimings
+
+	/** if the part was dunamically inserted (adlib) */
+	dynamicallyInserted?: boolean
+}
+/** The Part instance sent from Core */
+export interface IBlueprintPartInstance {
+	_id: string
+	/** The segment ("Title") this line belongs to */
+	segmentId: string
+
+	part: IBlueprintPartDB // TODO - omit some duplicated fields?
 }
 
 export interface IBlueprintPartDBTimings {
@@ -158,14 +208,21 @@ export enum PartHoldMode {
 	FROM = 1,
 	TO = 2
 }
+
+export declare enum PieceTransitionType {
+	MIX = 'MIX',
+	WIPE = 'WIPE'
+}
+export interface PieceTransition {
+	type: PieceTransitionType
+	duration: number
+}
 export interface PieceMetaData {
 	[key: string]: any
 }
 export interface IBlueprintPieceGeneric {
 	/** ID of the source object in the gateway */
 	externalId: string
-	/** The segment line this item belongs to - can be undefined for global ad lib pieces */
-	partId?: string
 	/** User-presentable name for the timeline item */
 	name: string
 	/** Arbitrary data storage for plugins */
@@ -178,25 +235,46 @@ export interface IBlueprintPieceGeneric {
 	/** The object describing the item in detail */
 	content?: SomeContent
 
+	/** The transition used by this piece to transition to and from the piece */
+	transitions?: {
+		/** In transition for the piece */
+		inTransition?: PieceTransition
+		/** The out transition for the piece */
+		outTransition?: PieceTransition
+	}
+
 	infiniteMode?: PieceLifespan
 
 	/** Duration to preroll/overlap when running this adlib */
 	adlibPreroll?: number
 	/** Whether the adlib should always be inserted queued */
 	toBeQueued?: boolean
+	/** Array of items expected to be played out. This is used by playout-devices to preload stuff. */
+	expectedPlayoutItems?: ExpectedPlayoutItemGeneric[]
 	/** When queued, should the adlib autonext */
 	adlibAutoNext?: boolean
 	/** When queued, how much overlap with the next part */
 	adlibAutoNextOverlap?: number
-	/** When queued, how long to keep the old part alive */
-	adlibTransitionKeepAlive?: number
 	/** When queued, block transition at the end of the part */
 	adlibDisableOutTransition?: boolean
+	/** When queued, how long to keep the old part alive */
+	adlibTransitionKeepAlive?: number
 	/** Whether the adlib can be combined with an already queued adlib */
 	canCombineQueue?: boolean
 }
 
-export type PieceEnable = Omit<Timeline.TimelineEnable, 'while' | 'repeating'>
+export interface ExpectedPlayoutItemGeneric {
+	/** What type of playout device this item should be handled by */
+	deviceSubType: TSR_DeviceType // subset of PeripheralDeviceAPI.DeviceSubType
+	/** Which playout device this item should be handled by */
+	// deviceId: string // Todo: implement deviceId support (later)
+	/** Content of the expectedPlayoutItem */
+	content: ExpectedPlayoutItemContent
+}
+export type ExpectedPlayoutItemContent = ExpectedPlayoutItemContentVizMSE
+
+export type PieceEnable = Required<Pick<Timeline.TimelineEnable, 'start'>> &
+	Pick<Timeline.TimelineEnable, 'end' | 'duration'>
 
 /** A Single item in a "line": script, VT, cameras. Generated by Blueprint */
 export interface IBlueprintPiece extends IBlueprintPieceGeneric {
@@ -214,8 +292,20 @@ export interface IBlueprintPiece extends IBlueprintPieceGeneric {
 export interface IBlueprintPieceDB extends IBlueprintPiece {
 	playoutDuration?: number
 
+	/** The part this item belongs to */
+	partId: string
+
 	/** This is the id of the original segment of an infinite piece chain. If it matches the id of itself then it is the first in the chain */
 	infiniteId?: string
+}
+export interface IBlueprintPieceInstance {
+	_id: string
+
+	piece: IBlueprintPieceDB
+}
+export interface IBlueprintResolvedPieceInstance extends IBlueprintPieceInstance {
+	resolvedStart: number
+	resolvedDuration?: number
 }
 
 export interface IBlueprintAdLibPiece extends IBlueprintPieceGeneric {
@@ -227,6 +317,8 @@ export interface IBlueprintAdLibPiece extends IBlueprintPieceGeneric {
 	expectedDuration?: number
 	/** User-defined tags that can be used for filtering in the Rundown Layouts without modifying the label */
 	tags?: string[]
+	/** When the NRCS informs us that the producer marked the part as floated, we can prevent the user from TAKE'ing it, but still have it visible and allow manipulation */
+	floated?: boolean
 	/** HACK: Remove when adlib actions are ready. */
 	additionalPieces?: IBlueprintAdLibPiece[]
 }

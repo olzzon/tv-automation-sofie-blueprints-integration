@@ -6,8 +6,8 @@ export interface IBlueprintAsRunLogEvent {
 	studioId: string
 	rundownId: string
 	segmentId?: string
-	partId?: string
-	pieceId?: string
+	partInstanceId?: string
+	pieceInstanceId?: string
 	timelineObjectId?: string
 
 	/** Name/id of the content */
@@ -23,6 +23,7 @@ export interface IBlueprintAsRunLogEvent {
 	rehersal: boolean
 }
 export enum IBlueprintAsRunLogEventContent {
+	DATACHANGED = 'dataChanged',
 	STARTEDPLAYBACK = 'startedPlayback',
-	STOPPEDPLAYBACK = 'stoppedPlayback'
+	STOPPEDPLAYBACK = 'stoppedPlayback',
 }

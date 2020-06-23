@@ -2,6 +2,153 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.12.0...2.0.0) (2020-06-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop node 8 support
+
+### Features
+
+* a proposal to allow adlib piece-like metadata on an adlib action to provide UI information like thumbnails, sourceDuration, etc. ([64cbef6](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/64cbef6c2f8293d50ad62dfc34e04054240f0bb8))
+* add custom mongo filtering to action.findLastPieceOnLayer [publish] ([7d18cb0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/7d18cb0595dbc2895cbdde1484d358f49c758a4b))
+* add dynamicallyInserted to IBlueprintPartDB [publish] ([eeca279](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/eeca279a57e7b0d5a14c6cc0b131d02feb047df4))
+* add rank to adlib actions ([b5bbc4a](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/b5bbc4aa9a6a5f19cc3801f436eb735551307b9d))
+* change segmentId to partId like in AdLibs [publish] ([b7f5329](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/b7f53295056ef3e060454f38ea125b627d8d45b3))
+* drop node 8 support ([b67be0e](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/b67be0ea645cd80a694dca9c0b2a8815b635c6ff))
+* first draft of adlib-actions api [publish] ([95a475c](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/95a475cfb2cc32a444ba781080d6449c748d6103))
+* more properties related to queuedForLater asRun messages ([371a7c2](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/371a7c2dddf4ac5f0237a34470dd248bdcc80f80))
+* support for asRunLog events for when rundown data has changed ([0a1986c](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/0a1986cdf61251bc6da57e15214cd0e65ffa8aea))
+* support for asRunLog messages that can be queued to be sent later, and picked up to be updated ([70ce9fc](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/70ce9fc9c05ba5076e87353099854fe04c7bedd1))
+* update ActionExecutionContext ([a71dfd6](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/a71dfd6fbd3cf6edb11c66c5bfa516fe5c87886b))
+
+
+### Bug Fixes
+
+* tweaks during tests [publish] ([364d344](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/364d34457fd3e02fe5c8e0eaef11e9f5cb83dc4b))
+* use only queueForLaterReason ([ae364c1](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/ae364c10d4d3a91db4184558a89e0d8347cd2542))
+
+## [1.12.0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.11.0...1.12.0) (2020-05-28)
+
+
+### Features
+
+* Add Select type to config manifest ([1f0f58e](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/1f0f58e1aaf01d08de42ab4cb6cd33dd78a3b549))
+* Add transition properties to adlibs ([9c1457e](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/9c1457ef3a1f6f8f63d39793e23902a451c76047))
+* mos plugin data ingest ([5a77cb7](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/5a77cb7c36661bf87b2144eeccb567bc94ae4d59))
+* option to preserve keyframes in lookahead, and give events the current time [publish] ([38735c5](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/38735c592a98188616a1cbc6e3d3d647bdf9fae1))
+* Table column ranks ([2214d26](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/2214d267b0f264f3f0c15330d48612385bb08050))
+
+## [1.11.0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.10.0...1.11.0) (2020-05-06)
+
+
+### Features
+
+* add lookaheadMaxSearchDepth property to mappings ([d92f60f](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/d92f60f64080bc605781a02819c8abd018cb79f2))
+* add metaData field to timeline object keyframes ([2227640](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/2227640986dd9830781c5ba780ff239f6fdb924e))
+* add stickyOriginalOnly property ([0d1725b](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/0d1725b7df5aa2977cbc2ebed575358c0666203d))
+* expectedPlayoutItems ([42b45b1](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/42b45b15c35d1c7388fd63f2915c2a01df7d596d))
+* introduce isDefaultCollapsed and isFlattened ([c5f2507](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/c5f25077603bb323a9336d0ad2b0bb3028c15e45))
+* Make sourceDuration optional ([a70a8a2](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/a70a8a2a09bf592d25b562ce8e3998b8324a721c))
+* Out-of-order playback timing and playlist looping ([#59](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/issues/59)) [publish] ([c7ad522](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/c7ad522a2d46d69dfc3bf2b1f79caa8173f4d049))
+* Property to force adlibs to be inserted queued ([6111ea1](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/6111ea1361192a43dd37e393e8a05ff7361a9b4e))
+* use experimental TSR version [publish] ([f8d5cc7](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/f8d5cc7ad7f13e68636e4fddf804f79717e69688))
+* **hidden:** allow hiding the segment in the UI ([82de87d](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/82de87d1ff9797d9483c8349859ae0689755b2c5))
+* **identifier:** add an optional identifier to the segment ([2e879e9](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/2e879e9c459d7f95a02b964d854cf047893cf52e))
+
+
+### Bug Fixes
+
+* DeviceOptionsAny ([88748d3](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/88748d3f90a4d7edaad19e2f78460fe85307fbfa))
+* merge marker ([2d1978d](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/2d1978dee5c7e44c63e9ab5d6159ae1ea6bdb9b4))
+* missing export ([894fe36](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/894fe361fb33fad093250db6dd18e5122ce02600))
+* non-adlib pieces need to set toBeQueued ([fdf5a38](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/fdf5a38389beed024c8d690da7a7146de015476f))
+* try different git url ([c1a511e](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/c1a511e8ac2b1fcc78ee2e850127383f8c2ba332))
+* update TSR-types dep ([d8c3eb8](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/d8c3eb83d763de7c7476022dd1c4b3299ecc9ddb))
+* use TSR types for ExpectedPlayoutItems [publish] ([45e602f](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/45e602fe0af68678499199082099e3e7546094f1))
+
+## [1.10.0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.9.0...1.10.0) (2020-03-24)
+
+
+### Features
+
+* **ci:** option to ignore security audits ([428708d](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/428708ded180c7097cc2e15a4dbdb0b5ce15bca0))
+* **identifier:** add an optional identifier to the segment ([b84feca](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/b84feca4744c4cb13d1825b6f45bc66cb2a6b82b))
+* **identifier:** optional part identifier ([1746de5](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/1746de54f900172d8546076277d7f45e09a1e007))
+* remove LookaheadMode.RETAIN (breaking change) [publish] ([1b999a3](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/1b999a3d5b8efc84e0f7268292a100657ff0fae1))
+* ResolvedPieceInstance (breaking change) ([22bea64](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/22bea6463e3d9ec1d34958e30ce134bdf41bd943))
+* restructure NotesContext ([40ec784](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/40ec7841d7488065154a329fb9225767a1fae4ab))
+
+
+### Bug Fixes
+
+* OnGenerateTimelineObj references pieceInstanceId not pieceId [publish] ([c1eeeb1](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/c1eeeb138a064f95b118740ccd76f3ad9b5b5465))
+* update for changes required by metadata [publish] ([bc70e01](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/bc70e0113915565e3877d9e7d137847fa4db0c33))
+
+## [1.9.0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.8.0...1.9.0) (2020-02-21)
+
+
+### Features
+
+* gap parts ([#56](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/issues/56)) ([2e84199](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/2e841995d0bec7a9e79ba909133990e1738bbf8c))
+
+## [1.8.0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.7.0...1.8.0) (2020-02-19)
+
+
+### Features
+
+* add isHidden property to segment [publish] ([a12f6c7](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/a12f6c7667e91e2872521f5b99ba9d69a9ea5715))
+* add toBeQueued to pieces [publish] ([002a2b5](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/002a2b50e9902654cc23eb5383bba3c763abdd76))
+* publish prereleases of branches ([2415a7f](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/2415a7f141380f99a3caf43794dcf5cfc93f3d71))
+
+## [1.7.0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.6.0...1.7.0) (2020-01-07)
+
+
+### Features
+
+* option to treat piece as a static asset and skip some checks ([a7fc8c8](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/a7fc8c8254009a14c8e1650675d18c0402395f1b))
+
+## [1.6.0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.5.0...1.6.0) (2019-12-13)
+
+
+### Features
+
+* add blueprintId field to manifests ([63d046a](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/63d046aafdbf9be9e4c8f6823ed270689aa39c14))
+* implement invalidReason ([#49](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/issues/49)) ([8db5e4e](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/8db5e4e0fa4068b2716630666650fd55aa599b99))
+
+## [1.5.0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.4.2...1.5.0) (2019-12-06)
+
+
+### Features
+
+* support floated parts and floated adLibs ([f073d98](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/f073d9858c9346062406fbe61fd2b3d8033bbb3f))
+
+### [1.4.2](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.4.1...1.4.2) (2019-12-03)
+
+### [1.4.1](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.4.0...1.4.1) (2019-12-03)
+
+## [1.4.0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.3.0...1.4.0) (2019-12-02)
+
+
+### Features
+
+* re-export tsr-types ([9594844](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/9594844cdafaf5b84c3464845a3d3f1e46e03543))
+
+## [1.3.0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.2.1...1.3.0) (2019-11-22)
+
+
+### Features
+
+* add piece transitions properties, with simple typings ([eda59aa](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/eda59aa2dc19776e0389ffed05bb57b875d184fd))
+
+### [1.2.1](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.2.0...1.2.1) (2019-11-14)
+
+
+### Bug Fixes
+
+* update typings after TSR update ([925614d](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/commit/925614d460c548d5119f2d924eefda787df48a8d))
+
 ## [1.2.0](https://github.com/nrkno/tv-automation-sofie-blueprints-integration/compare/1.1.0...1.2.0) (2019-10-29)
 
 

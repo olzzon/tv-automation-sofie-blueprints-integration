@@ -4,6 +4,7 @@ import { SourceLayerType } from './content'
 
 export enum ConfigManifestEntryType {
 	STRING = 'string',
+	MULTILINE_STRING = 'multiline_string',
 	NUMBER = 'number',
 	BOOLEAN = 'boolean',
 	ENUM = 'enum',
@@ -16,6 +17,7 @@ export enum ConfigManifestEntryType {
 
 export type BasicConfigManifestEntry =
 	| ConfigManifestEntryString
+	| ConfigManifestEntryMultilineString
 	| ConfigManifestEntryNumber
 	| ConfigManifestEntryBoolean
 	| ConfigManifestEntryEnum
@@ -41,6 +43,12 @@ export interface ConfigManifestEntryString extends ConfigManifestEntryBase {
 	type: ConfigManifestEntryType.STRING
 	defaultVal: string
 }
+
+/** Text area, each line entered is a string in an array */
+export interface ConfigManifestEntryMultilineString extends ConfigManifestEntryBase {
+	type: ConfigManifestEntryType.MULTILINE_STRING
+	defaultVal: string[]
+}
 export interface ConfigManifestEntryNumber extends ConfigManifestEntryBase {
 	type: ConfigManifestEntryType.NUMBER
 	defaultVal: number
@@ -60,12 +68,10 @@ export interface ConfigManifestEntryJson extends ConfigManifestEntryBase {
 }
 export interface ConfigManifestEntryTable extends ConfigManifestEntryBase {
 	type: ConfigManifestEntryType.TABLE
-	columns: Array<
-		BasicConfigManifestEntry & {
-			/** Column rank (left to right, lowest to highest) */
-			rank: number
-		}
-	>
+	columns: (BasicConfigManifestEntry & {
+		/** Column rank (left to right, lowest to highest) */
+		rank: number
+	})[]
 	defaultVal: TableConfigItemValue
 }
 

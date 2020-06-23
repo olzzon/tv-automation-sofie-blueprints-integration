@@ -1,18 +1,9 @@
 import { TSRTimelineObjBase } from 'timeline-state-resolver-types'
 
+import { ActionUserData, IBlueprintActionManifest } from './action'
 import { ConfigManifestEntry } from './config'
-import { IBlueprintExternalMessageQueueObj } from './message'
 import {
-	IBlueprintAdLibPiece,
-	IBlueprintPart,
-	IBlueprintPiece,
-	IBlueprintPieceDB,
-	IBlueprintRundown,
-	IBlueprintRundownPlaylistInfo,
-	IBlueprintSegment
-} from './rundown'
-
-import {
+	ActionExecutionContext,
 	AsRunEventContext,
 	EventContext,
 	IStudioConfigContext,
@@ -20,17 +11,27 @@ import {
 	PartEventContext,
 	RundownContext,
 	SegmentContext,
-	ShowStyleContext
+	ShowStyleContext,
 } from './context'
-import { IngestRundown, IngestSegment } from './ingest'
+import { IngestAdlib, IngestRundown, IngestSegment } from './ingest'
+import { IBlueprintExternalMessageQueueObj } from './message'
 import { MigrationStep } from './migrations'
+import {
+	IBlueprintAdLibPiece,
+	IBlueprintPart,
+	IBlueprintPiece,
+	IBlueprintResolvedPieceInstance,
+	IBlueprintRundown,
+	IBlueprintRundownPlaylistInfo,
+	IBlueprintSegment,
+} from './rundown'
 import { IBlueprintShowStyleBase, IBlueprintShowStyleVariant } from './showStyle'
 import { OnGenerateTimelineObj } from './timeline'
 
 export enum BlueprintManifestType {
 	SYSTEM = 'system',
 	STUDIO = 'studio',
-	SHOWSTYLE = 'showstyle'
+	SHOWSTYLE = 'showstyle',
 }
 
 export interface BlueprintManifestSet {
@@ -42,6 +43,8 @@ export interface BlueprintManifestBase {
 	blueprintType: BlueprintManifestType
 	// Manifest properties, to be used by Core
 
+	/** Unique id of the blueprint. This is used by core to check if blueprints are the same blueprint, but differing versions */
+	blueprintId?: string
 	/** Version of the blueprint */
 	blueprintVersion: string
 	/** Version of the blueprint-integration that the blueprint depend on */
@@ -102,9 +105,11 @@ export interface ShowStyleBlueprintManifest extends BlueprintManifestBase {
 	/** Generate segment from ingest data */
 	getSegment: (context: SegmentContext, ingestSegment: IngestSegment) => BlueprintResultSegment
 
-	/** Generate Part from ingest data. If null, then getSegment is used instead */
-	// TODO: Not used in core yet
-	// getPart?: (context: PartContext, ingestPart: IngestPart) => BlueprintResultPart | null
+	/** Execute an action defined by an IBlueprintActionManifest */
+	executeAction?: (context: EventContext & ActionExecutionContext, actionId: string, userData: ActionUserData) => void // Promise<void> | void
+
+	/** Generate adlib piece from ingest data */
+	getAdlibItem?: (context: ShowStyleContext, ingestItem: IngestAdlib) => IBlueprintAdLibPiece | null
 
 	// Events
 
@@ -122,7 +127,7 @@ export interface ShowStyleBlueprintManifest extends BlueprintManifestBase {
 		timeline: OnGenerateTimelineObj[],
 		previousPersistentState: TimelinePersistentState | undefined,
 		previousPartEndState: PartEndState | undefined,
-		resolvedPieces: IBlueprintPieceDB[]
+		resolvedPieces: IBlueprintResolvedPieceInstance[]
 	) => Promise<BlueprintResultTimeline>
 
 	/** Called just before taking the next part. This generates some persisted data used by onTimelineGenerate to modify the timeline based on the previous part (eg, persist audio levels) */
@@ -130,7 +135,7 @@ export interface ShowStyleBlueprintManifest extends BlueprintManifestBase {
 		context: RundownContext,
 		previousPersistentState: TimelinePersistentState | undefined,
 		previousPartEndState: PartEndState | undefined,
-		resolvedPieces: IBlueprintPiece[],
+		resolvedPieces: IBlueprintResolvedPieceInstance[],
 		time: number
 	) => PartEndState
 
@@ -153,6 +158,7 @@ export interface BlueprintResultTimeline {
 export interface BlueprintResultRundown {
 	rundown: IBlueprintRundown
 	globalAdLibPieces: IBlueprintAdLibPiece[]
+	globalActions?: IBlueprintActionManifest[]
 	baseline: TSRTimelineObjBase[]
 }
 export interface BlueprintResultSegment {
@@ -164,6 +170,7 @@ export interface BlueprintResultPart {
 	part: IBlueprintPart
 	pieces: IBlueprintPiece[]
 	adLibPieces: IBlueprintAdLibPiece[]
+	actions?: IBlueprintActionManifest[]
 }
 
 /** Key is the ID of the external ID of the Rundown, Value is the rank to be assigned */

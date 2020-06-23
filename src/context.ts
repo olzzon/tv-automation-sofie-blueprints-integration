@@ -1,12 +1,18 @@
 import { IBlueprintAsRunLogEvent } from './asRunLog'
 import { ConfigItemValue } from './common'
 import { IngestPart, IngestRundown } from './ingest'
+import { IBlueprintExternalMessageQueueObj } from './message'
+import { OmitId } from './lib'
 import {
 	BlueprintRuntimeArguments,
+	IBlueprintPart,
 	IBlueprintPartDB,
+	IBlueprintPartInstance,
 	IBlueprintPiece,
+	IBlueprintPieceInstance,
+	IBlueprintResolvedPieceInstance,
 	IBlueprintRundownDB,
-	IBlueprintSegmentDB
+	IBlueprintSegmentDB,
 } from './rundown'
 import { BlueprintMappings } from './studio'
 
@@ -26,7 +32,6 @@ export interface ICommonContext {
 export interface NotesContext extends ICommonContext {
 	error: (message: string) => void
 	warning: (message: string) => void
-	getNotes: () => any[]
 }
 
 /** Studio */
@@ -62,10 +67,52 @@ export interface RundownContext extends ShowStyleContext {
 
 export interface SegmentContext extends RundownContext {
 	getRuntimeArguments: (externalId: string) => Readonly<BlueprintRuntimeArguments> | undefined
+
+	error: (message: string, partExternalId?: string) => void
+	warning: (message: string, partExternalId?: string) => void
 }
 
-export interface PartContext extends RundownContext {
-	getRuntimeArguments: () => Readonly<BlueprintRuntimeArguments>
+/** Actions */
+
+export interface ActionExecutionContext extends ShowStyleContext {
+	/** Data fetching */
+	// getIngestRundown(): IngestRundown // TODO - for which part?
+	/** Get a PartInstance which can be modified */
+	getPartInstance(part: 'current' | 'next'): IBlueprintPartInstance | undefined
+	/** Get the PieceInstances for a modifiable PartInstance */
+	getPieceInstances(part: 'current' | 'next'): IBlueprintPieceInstance[]
+	/** Get the resolved PieceInstances for a modifiable PartInstance */
+	getResolvedPieceInstances(part: 'current' | 'next'): IBlueprintResolvedPieceInstance[]
+	/** Get the last active piece on given layer */
+	findLastPieceOnLayer(
+		sourceLayerId: string,
+		options?: {
+			excludeCurrentPart?: boolean
+			originalOnly?: boolean
+			pieceMetaDataFilter?: any // Mongo query against properties inside of piece.metaData
+		}
+	): IBlueprintPieceInstance | undefined
+	/** Fetch the showstyle config for the specified part */
+	// getNextShowStyleConfig(): Readonly<{ [key: string]: ConfigItemValue }>
+
+	/** Creative actions */
+	/** Insert a piece. Returns id of new PieceInstance. Any timelineObjects will have their ids changed, so are not safe to reference from another piece */
+	insertPiece(part: 'current' | 'next', piece: IBlueprintPiece): IBlueprintPieceInstance
+	/** Update a piecesInstances */
+	updatePieceInstance(pieceInstanceId: string, piece: Partial<OmitId<IBlueprintPiece>>): IBlueprintPieceInstance
+	/** Insert a queued part to follow the current part */
+	queuePart(part: IBlueprintPart, pieces: IBlueprintPiece[]): IBlueprintPartInstance
+
+	/** Destructive actions */
+	/** Stop any piecesInstances on the specified sourceLayers. Returns ids of piecesInstances that were affected */
+	stopPiecesOnLayers(sourceLayerIds: string[], timeOffset?: number): string[]
+	/** Stop piecesInstances by id. Returns ids of piecesInstances that were removed */
+	stopPieceInstances(pieceInstanceIds: string[], timeOffset?: number): string[]
+
+	/** Misc actions */
+	// updateAction(newManifest: Pick<IBlueprintAdLibActionManifest, 'description' | 'payload'>): void // only updates itself. to allow for the next one to do something different
+	// executePeripheralDeviceAction(deviceId: string, functionName: string, args: any[]): Promise<any>
+	// openUIDialogue(message: string) // ?????
 }
 
 /** Events */
@@ -73,23 +120,27 @@ export interface PartContext extends RundownContext {
 // tslint:disable-next-line: no-empty-interface
 export interface EventContext {
 	// TDB: Certain actions that can be triggered in Core by the Blueprint
+	getCurrentTime(): number
 }
 
 export interface PartEventContext extends EventContext, RundownContext {
-	readonly part: Readonly<IBlueprintPartDB>
+	readonly part: Readonly<IBlueprintPartInstance>
 }
 
 export interface AsRunEventContext extends RundownContext {
 	readonly asRunEvent: Readonly<IBlueprintAsRunLogEvent>
 
-	/** Get the ingest data related to the rundown */
-	getIngestDataForRundown: () => Readonly<IngestRundown> | undefined
-
-	formatDateAsTimecode: (time: number) => string
-	formatDurationAsTimecode: (time: number) => string
+	formatDateAsTimecode(time: number): string
+	formatDurationAsTimecode(time: number): string
 
 	/** Get all asRunEvents in the rundown */
 	getAllAsRunEvents(): Readonly<IBlueprintAsRunLogEvent[]>
+
+	/** Get all unsent and queued messages in the rundown */
+	getAllQueuedMessages(): Readonly<IBlueprintExternalMessageQueueObj[]>
+
+	/** Originals */
+
 	/** Get all segments in this rundown */
 	getSegments(): Readonly<IBlueprintSegmentDB[]>
 	/**
@@ -100,21 +151,33 @@ export interface AsRunEventContext extends RundownContext {
 
 	/** Get all parts in this rundown */
 	getParts(): Readonly<IBlueprintPartDB[]>
+
+	/** Instances */
+
 	/**
-	 * Returns a part.
-	 * @param id Id of part to fetch. If omitted, return the part related to this AsRunEvent
+	 * Returns a partInstance.
+	 * @param id Id of partInstance to fetch. If omitted, return the partInstance related to this AsRunEvent
 	 */
-	getPart(id?: string): Readonly<IBlueprintPartDB> | undefined
+	getPartInstance(id?: string): Readonly<IBlueprintPartInstance> | undefined
 	/**
-	 * Returns a piece.
-	 * @param id Id of piece to fetch. If omitted, return the piece related to this AsRunEvent
+	 * Returns a pieceInstance.
+	 * @param id Id of pieceInstance to fetch. If omitted, return the pieceInstance related to this AsRunEvent
 	 */
-	getPiece(pieceId?: string): Readonly<IBlueprintPiece> | undefined
+	getPieceInstance(pieceInstanceId?: string): Readonly<IBlueprintPieceInstance> | undefined
 	/**
-	 * Returns pieces in a part
-	 * @param id Id of part to fetch items in
+	 * Returns pieces in a partInstance
+	 * @param id Id of partInstance to fetch items in
 	 */
-	getPieces(partId: string): Readonly<IBlueprintPiece[]>
+	getPieceInstances(partInstanceId: string): Readonly<IBlueprintPieceInstance[]>
+
+	/** Ingest Data */
+
+	/** Get the ingest data related to the rundown */
+	getIngestDataForRundown(): Readonly<IngestRundown> | undefined
+
 	/** Get the ingest data related to a part */
 	getIngestDataForPart(part: Readonly<IBlueprintPartDB>): Readonly<IngestPart> | undefined
+
+	/** Get the ingest data related to a partInstance */
+	getIngestDataForPartInstance(partInstance: Readonly<IBlueprintPartInstance>): Readonly<IngestPart> | undefined
 }
