@@ -3,6 +3,7 @@ import { ConfigItemValue, TableConfigItemValue } from './common';
 import { SourceLayerType } from './content';
 export declare enum ConfigManifestEntryType {
     STRING = "string",
+    MULTILINE_STRING = "multiline_string",
     NUMBER = "number",
     BOOLEAN = "boolean",
     ENUM = "enum",
@@ -12,7 +13,7 @@ export declare enum ConfigManifestEntryType {
     LAYER_MAPPINGS = "layer_mappings",
     JSON = "json"
 }
-export declare type BasicConfigManifestEntry = ConfigManifestEntryString | ConfigManifestEntryNumber | ConfigManifestEntryBoolean | ConfigManifestEntryEnum | ConfigManifestEntrySelectFromOptions<true> | ConfigManifestEntrySelectFromOptions<false> | ConfigManifestEntrySourceLayers<true> | ConfigManifestEntrySourceLayers<false> | ConfigManifestEntryLayerMappings<true> | ConfigManifestEntryLayerMappings<false> | ConfigManifestEntryJson;
+export declare type BasicConfigManifestEntry = ConfigManifestEntryString | ConfigManifestEntryMultilineString | ConfigManifestEntryNumber | ConfigManifestEntryBoolean | ConfigManifestEntryEnum | ConfigManifestEntrySelectFromOptions<true> | ConfigManifestEntrySelectFromOptions<false> | ConfigManifestEntrySourceLayers<true> | ConfigManifestEntrySourceLayers<false> | ConfigManifestEntryLayerMappings<true> | ConfigManifestEntryLayerMappings<false> | ConfigManifestEntryJson;
 export declare type ConfigManifestEntry = BasicConfigManifestEntry | ConfigManifestEntryTable;
 export interface ConfigManifestEntryBase {
     id: string;
@@ -25,6 +26,11 @@ export interface ConfigManifestEntryBase {
 export interface ConfigManifestEntryString extends ConfigManifestEntryBase {
     type: ConfigManifestEntryType.STRING;
     defaultVal: string;
+}
+/** Text area, each line entered is a string in an array */
+export interface ConfigManifestEntryMultilineString extends ConfigManifestEntryBase {
+    type: ConfigManifestEntryType.MULTILINE_STRING;
+    defaultVal: string[];
 }
 export interface ConfigManifestEntryNumber extends ConfigManifestEntryBase {
     type: ConfigManifestEntryType.NUMBER;
@@ -45,10 +51,10 @@ export interface ConfigManifestEntryJson extends ConfigManifestEntryBase {
 }
 export interface ConfigManifestEntryTable extends ConfigManifestEntryBase {
     type: ConfigManifestEntryType.TABLE;
-    columns: Array<BasicConfigManifestEntry & {
+    columns: (BasicConfigManifestEntry & {
         /** Column rank (left to right, lowest to highest) */
         rank: number;
-    }>;
+    })[];
     defaultVal: TableConfigItemValue;
 }
 interface ConfigManifestEntrySelectBase<Multiple extends boolean> extends ConfigManifestEntryBase {

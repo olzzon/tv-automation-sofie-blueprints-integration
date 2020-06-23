@@ -4,8 +4,8 @@ export interface IConfigItem {
     value: ConfigItemValue;
 }
 export declare type ConfigItemValue = BasicConfigItemValue | TableConfigItemValue;
-export declare type TableConfigItemValue = Array<{
+export declare type TableConfigItemValue = {
     _id: string;
     [key: string]: BasicConfigItemValue;
-}>;
+}[];
 export declare type BasicConfigItemValue = string | number | boolean | string[];

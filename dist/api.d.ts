@@ -1,10 +1,11 @@
 import { TSRTimelineObjBase } from 'timeline-state-resolver-types';
+import { ActionUserData, IBlueprintActionManifest } from './action';
 import { ConfigManifestEntry } from './config';
+import { ActionExecutionContext, AsRunEventContext, EventContext, IStudioConfigContext, IStudioContext, PartEventContext, RundownContext, SegmentContext, ShowStyleContext } from './context';
+import { IngestAdlib, IngestRundown, IngestSegment } from './ingest';
 import { IBlueprintExternalMessageQueueObj } from './message';
-import { IBlueprintAdLibPiece, IBlueprintPart, IBlueprintPiece, IBlueprintPieceDB, IBlueprintRundown, IBlueprintRundownPlaylistInfo, IBlueprintSegment } from './rundown';
-import { AsRunEventContext, EventContext, IStudioConfigContext, IStudioContext, PartEventContext, RundownContext, SegmentContext, ShowStyleContext } from './context';
-import { IngestRundown, IngestSegment } from './ingest';
 import { MigrationStep } from './migrations';
+import { IBlueprintAdLibPiece, IBlueprintPart, IBlueprintPiece, IBlueprintResolvedPieceInstance, IBlueprintRundown, IBlueprintRundownPlaylistInfo, IBlueprintSegment } from './rundown';
 import { IBlueprintShowStyleBase, IBlueprintShowStyleVariant } from './showStyle';
 import { OnGenerateTimelineObj } from './timeline';
 export declare enum BlueprintManifestType {
@@ -18,6 +19,8 @@ export interface BlueprintManifestSet {
 export declare type SomeBlueprintManifest = SystemBlueprintManifest | StudioBlueprintManifest | ShowStyleBlueprintManifest;
 export interface BlueprintManifestBase {
     blueprintType: BlueprintManifestType;
+    /** Unique id of the blueprint. This is used by core to check if blueprints are the same blueprint, but differing versions */
+    blueprintId?: string;
     /** Version of the blueprint */
     blueprintVersion: string;
     /** Version of the blueprint-integration that the blueprint depend on */
@@ -55,7 +58,10 @@ export interface ShowStyleBlueprintManifest extends BlueprintManifestBase {
     getRundown: (context: ShowStyleContext, ingestRundown: IngestRundown) => BlueprintResultRundown;
     /** Generate segment from ingest data */
     getSegment: (context: SegmentContext, ingestSegment: IngestSegment) => BlueprintResultSegment;
-    /** Generate Part from ingest data. If null, then getSegment is used instead */
+    /** Execute an action defined by an IBlueprintActionManifest */
+    executeAction?: (context: EventContext & ActionExecutionContext, actionId: string, userData: ActionUserData) => void;
+    /** Generate adlib piece from ingest data */
+    getAdlibItem?: (context: ShowStyleContext, ingestItem: IngestAdlib) => IBlueprintAdLibPiece | null;
     onRundownActivate?: (context: EventContext & RundownContext) => Promise<void>;
     onRundownFirstTake?: (context: EventContext & PartEventContext) => Promise<void>;
     onRundownDeActivate?: (context: EventContext & RundownContext) => Promise<void>;
@@ -63,9 +69,9 @@ export interface ShowStyleBlueprintManifest extends BlueprintManifestBase {
     onPreTake?: (context: EventContext & PartEventContext) => Promise<void>;
     onPostTake?: (context: EventContext & PartEventContext) => Promise<void>;
     /** Called after the timeline has been generated, used to manipulate the timeline */
-    onTimelineGenerate?: (context: PartEventContext, timeline: OnGenerateTimelineObj[], previousPersistentState: TimelinePersistentState | undefined, previousPartEndState: PartEndState | undefined, resolvedPieces: IBlueprintPieceDB[]) => Promise<BlueprintResultTimeline>;
+    onTimelineGenerate?: (context: PartEventContext, timeline: OnGenerateTimelineObj[], previousPersistentState: TimelinePersistentState | undefined, previousPartEndState: PartEndState | undefined, resolvedPieces: IBlueprintResolvedPieceInstance[]) => Promise<BlueprintResultTimeline>;
     /** Called just before taking the next part. This generates some persisted data used by onTimelineGenerate to modify the timeline based on the previous part (eg, persist audio levels) */
-    getEndStateForPart?: (context: RundownContext, previousPersistentState: TimelinePersistentState | undefined, previousPartEndState: PartEndState | undefined, resolvedPieces: IBlueprintPiece[], time: number) => PartEndState;
+    getEndStateForPart?: (context: RundownContext, previousPersistentState: TimelinePersistentState | undefined, previousPartEndState: PartEndState | undefined, resolvedPieces: IBlueprintResolvedPieceInstance[], time: number) => PartEndState;
     /** Called after an as-run event is created */
     onAsRunEvent?: (context: EventContext & AsRunEventContext) => Promise<IBlueprintExternalMessageQueueObj[]>;
 }
@@ -82,6 +88,7 @@ export interface BlueprintResultTimeline {
 export interface BlueprintResultRundown {
     rundown: IBlueprintRundown;
     globalAdLibPieces: IBlueprintAdLibPiece[];
+    globalActions?: IBlueprintActionManifest[];
     baseline: TSRTimelineObjBase[];
 }
 export interface BlueprintResultSegment {
@@ -92,6 +99,7 @@ export interface BlueprintResultPart {
     part: IBlueprintPart;
     pieces: IBlueprintPiece[];
     adLibPieces: IBlueprintAdLibPiece[];
+    actions?: IBlueprintActionManifest[];
 }
 /** Key is the ID of the external ID of the Rundown, Value is the rank to be assigned */
 export interface BlueprintResultOrderedRundowns {

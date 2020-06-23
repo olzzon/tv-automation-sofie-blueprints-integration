@@ -43,6 +43,6 @@ var TimelineObjHoldMode;
 (function (TimelineObjHoldMode) {
     TimelineObjHoldMode[TimelineObjHoldMode["NORMAL"] = 0] = "NORMAL";
     TimelineObjHoldMode[TimelineObjHoldMode["ONLY"] = 1] = "ONLY";
-    TimelineObjHoldMode[TimelineObjHoldMode["EXCEPT"] = 2] = "EXCEPT"; // Only use when not in HOLD
+    TimelineObjHoldMode[TimelineObjHoldMode["EXCEPT"] = 2] = "EXCEPT";
 })(TimelineObjHoldMode = exports.TimelineObjHoldMode || (exports.TimelineObjHoldMode = {}));
 //# sourceMappingURL=timeline.js.map

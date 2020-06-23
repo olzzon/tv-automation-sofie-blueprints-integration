@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ConfigManifestEntryType;
 (function (ConfigManifestEntryType) {
     ConfigManifestEntryType["STRING"] = "string";
+    ConfigManifestEntryType["MULTILINE_STRING"] = "multiline_string";
     ConfigManifestEntryType["NUMBER"] = "number";
     ConfigManifestEntryType["BOOLEAN"] = "boolean";
     ConfigManifestEntryType["ENUM"] = "enum";

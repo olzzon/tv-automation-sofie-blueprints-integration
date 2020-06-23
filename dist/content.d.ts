@@ -52,6 +52,7 @@ export interface VTContent extends BaseContent {
     mediaFlowIds?: string[];
     seek?: number;
     editable?: VTEditableParameters;
+    ignoreMediaObjectStatus?: boolean;
 }
 export interface CameraContent extends BaseContent {
     studioLabel: string;
@@ -122,7 +123,7 @@ export interface SplitsContentBoxProperties {
 export declare type SplitsContentBoxContent = Omit<VTContent | CameraContent | RemoteContent | GraphicsContent, 'timelineObjects'>;
 export interface SplitsContent extends BaseContent {
     /** Array of contents, 0 is towards the rear */
-    boxSourceConfiguration: Array<SplitsContentBoxContent & SplitsContentBoxProperties>;
+    boxSourceConfiguration: (SplitsContentBoxContent & SplitsContentBoxProperties)[];
     timelineObjects: TimelineObjectCoreExt[];
 }
 export interface AudioContent extends BaseContent {
