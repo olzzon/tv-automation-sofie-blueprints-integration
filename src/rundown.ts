@@ -83,14 +83,14 @@ export interface IBlueprintSegmentDB extends IBlueprintSegment {
 	_id: string
 }
 
-/** The Part generated from Blueprint */
-export interface IBlueprintPart {
-	/** Id of the part from the gateway if this part does not map directly to an IngestPart. This must be unique for each part */
-	externalId: string
+export interface PartMetaData {
+	[key: string]: any
+}
+export interface IBlueprintMutatablePart {
 	/** The story title */
 	title: string
 	/** Arbitrary data storage for plugins */
-	metaData?: { [key: string]: any }
+	metaData?: PartMetaData
 
 	/** Should this item should progress to the next automatically */
 	autoNext?: boolean
@@ -123,6 +123,14 @@ export interface IBlueprintPart {
 
 	displayDurationGroup?: string
 	displayDuration?: number
+
+	/** User-facing identifier that can be used by the User to identify the contents of a segment in the Rundown source system */
+	identifier?: string
+}
+/** The Part generated from Blueprint */
+export interface IBlueprintPart extends IBlueprintMutatablePart {
+	/** Id of the part from the gateway if this part does not map directly to an IngestPart. This must be unique for each part */
+	externalId: string
 
 	/**
 	 * When something bad has happened, we can mark the part as invalid, which will prevent the user from TAKEing it.
@@ -167,9 +175,6 @@ export interface IBlueprintPart {
 
 	/** User-facing identifier that can be used by the User to identify the contents of a segment in the Rundown source system */
 	identifier?: string
-
-	/** Whether queued adlibs can be combined into this part. Usually set by core. */
-	canCombineQueue?: boolean
 }
 /** The Part sent from Core */
 export interface IBlueprintPartDB extends IBlueprintPart {
