@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const _ = require("underscore");
 var iterateDeeplyEnum;
 (function (iterateDeeplyEnum) {
@@ -36,26 +35,24 @@ exports.iterateDeeply = iterateDeeply;
  * @param obj the object or array to iterate through
  * @param iteratee function to apply on every attribute
  */
-function iterateDeeplyAsync(obj, iteratee, key) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        const newValue = yield iteratee(obj, key);
-        if (newValue === iterateDeeplyEnum.CONTINUE) {
-            // Continue iterate deeper if possible
-            if (_.isObject(obj)) {
-                // object or array
-                yield Promise.all(_.map(obj, (v, k) => tslib_1.__awaiter(this, void 0, void 0, function* () {
-                    obj[k] = yield iterateDeeplyAsync(v, iteratee, k);
-                })));
-            }
-            else {
-                // don't change anything
-            }
-            return obj;
+async function iterateDeeplyAsync(obj, iteratee, key) {
+    const newValue = await iteratee(obj, key);
+    if (newValue === iterateDeeplyEnum.CONTINUE) {
+        // Continue iterate deeper if possible
+        if (_.isObject(obj)) {
+            // object or array
+            await Promise.all(_.map(obj, async (v, k) => {
+                obj[k] = await iterateDeeplyAsync(v, iteratee, k);
+            }));
         }
         else {
-            return newValue;
+            // don't change anything
         }
-    });
+        return obj;
+    }
+    else {
+        return newValue;
+    }
 }
 exports.iterateDeeplyAsync = iterateDeeplyAsync;
 //# sourceMappingURL=util.js.map

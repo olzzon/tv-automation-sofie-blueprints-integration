@@ -2,10 +2,10 @@ import { TSRTimelineObjBase } from 'timeline-state-resolver-types';
 import { ActionUserData, IBlueprintActionManifest } from './action';
 import { ConfigManifestEntry } from './config';
 import { ActionExecutionContext, AsRunEventContext, EventContext, IStudioConfigContext, IStudioContext, PartEventContext, RundownContext, SegmentContext, ShowStyleContext } from './context';
-import { IngestAdlib, IngestRundown, IngestSegment } from './ingest';
+import { IngestAdlib, ExtendedIngestRundown, IngestSegment } from './ingest';
 import { IBlueprintExternalMessageQueueObj } from './message';
 import { MigrationStep } from './migrations';
-import { IBlueprintAdLibPiece, IBlueprintPart, IBlueprintPiece, IBlueprintResolvedPieceInstance, IBlueprintRundown, IBlueprintRundownPlaylistInfo, IBlueprintSegment } from './rundown';
+import { IBlueprintAdLibPiece, IBlueprintPart, IBlueprintPiece, IBlueprintResolvedPieceInstance, IBlueprintRundown, IBlueprintRundownPlaylistInfo, IBlueprintSegment, IBlueprintRundownDB } from './rundown';
 import { IBlueprintShowStyleBase, IBlueprintShowStyleVariant } from './showStyle';
 import { OnGenerateTimelineObj } from './timeline';
 export declare enum BlueprintManifestType {
@@ -42,9 +42,9 @@ export interface StudioBlueprintManifest extends BlueprintManifestBase {
     /** Returns the items used to build the baseline (default state) of a studio, this is the baseline used when there's no active rundown */
     getBaseline: (context: IStudioContext) => TSRTimelineObjBase[];
     /** Returns the id of the show style to use for a rundown, return null to ignore that rundown */
-    getShowStyleId: (context: IStudioConfigContext, showStyles: IBlueprintShowStyleBase[], ingestRundown: IngestRundown) => string | null;
+    getShowStyleId: (context: IStudioConfigContext, showStyles: IBlueprintShowStyleBase[], ingestRundown: ExtendedIngestRundown) => string | null;
     /** Returns information about the playlist this rundown is a part of, return null to not make it a part of a playlist */
-    getRundownPlaylistInfo?: (rundowns: IBlueprintRundown[]) => BlueprintResultRundownPlaylist | null;
+    getRundownPlaylistInfo?: (rundowns: IBlueprintRundownDB[]) => BlueprintResultRundownPlaylist | null;
 }
 export interface ShowStyleBlueprintManifest extends BlueprintManifestBase {
     blueprintType: BlueprintManifestType.SHOWSTYLE;
@@ -53,9 +53,9 @@ export interface ShowStyleBlueprintManifest extends BlueprintManifestBase {
     /** A list of Migration steps related to a ShowStyle */
     showStyleMigrations: MigrationStep[];
     /** Returns the id of the show style variant to use for a rundown, return null to ignore that rundown */
-    getShowStyleVariantId: (context: IStudioConfigContext, showStyleVariants: IBlueprintShowStyleVariant[], ingestRundown: IngestRundown) => string | null;
+    getShowStyleVariantId: (context: IStudioConfigContext, showStyleVariants: IBlueprintShowStyleVariant[], ingestRundown: ExtendedIngestRundown) => string | null;
     /** Generate rundown from ingest data. return null to ignore that rundown */
-    getRundown: (context: ShowStyleContext, ingestRundown: IngestRundown) => BlueprintResultRundown;
+    getRundown: (context: ShowStyleContext, ingestRundown: ExtendedIngestRundown) => BlueprintResultRundown;
     /** Generate segment from ingest data */
     getSegment: (context: SegmentContext, ingestSegment: IngestSegment) => BlueprintResultSegment;
     /** Execute an action defined by an IBlueprintActionManifest */

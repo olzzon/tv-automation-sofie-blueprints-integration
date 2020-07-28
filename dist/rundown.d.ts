@@ -5,7 +5,6 @@ import { Timeline } from './timeline';
 export interface IBlueprintRundownPlaylistInfo {
     /** Rundown playlist slug - user-presentable name */
     name: string;
-    externalId: string;
     /** Expected start should be set to the expected time this rundown playlist should run on air */
     expectedStart?: Time;
     /** Expected duration of the rundown playlist */
@@ -32,7 +31,10 @@ export interface IBlueprintRundown {
     playlistExternalId?: string;
 }
 /** The Rundown sent from Core */
-export interface IBlueprintRundownDB extends IBlueprintRundown {
+export interface IBlueprintRundownDB extends IBlueprintRundown, IBlueprintRundownDBData {
+}
+/** Properties added to a rundown in Core */
+export interface IBlueprintRundownDBData {
     _id: string;
     /** Id of the showStyle variant used */
     showStyleVariantId: string;
@@ -40,6 +42,8 @@ export interface IBlueprintRundownDB extends IBlueprintRundown {
     playlistId?: string;
     /** Rundown's place in the RundownPlaylist */
     _rank?: number;
+    /** Air-status, comes from NCS, examples: "READY" | "NOT READY" */
+    airStatus?: string;
 }
 /** Collection of runtime arguments to apply */
 export interface BlueprintRuntimeArguments {
@@ -70,16 +74,14 @@ export interface IBlueprintSegment {
 export interface IBlueprintSegmentDB extends IBlueprintSegment {
     _id: string;
 }
-/** The Part generated from Blueprint */
-export interface IBlueprintPart {
-    /** Id of the part from the gateway if this part does not map directly to an IngestPart. This must be unique for each part */
-    externalId: string;
+export interface PartMetaData {
+    [key: string]: any;
+}
+export interface IBlueprintMutatablePart {
     /** The story title */
     title: string;
     /** Arbitrary data storage for plugins */
-    metaData?: {
-        [key: string]: any;
-    };
+    metaData?: PartMetaData;
     /** Should this item should progress to the next automatically */
     autoNext?: boolean;
     /** How much to overlap on when doing autonext */
@@ -106,6 +108,13 @@ export interface IBlueprintPart {
     classesForNext?: string[];
     displayDurationGroup?: string;
     displayDuration?: number;
+    /** User-facing identifier that can be used by the User to identify the contents of a segment in the Rundown source system */
+    identifier?: string;
+}
+/** The Part generated from Blueprint */
+export interface IBlueprintPart extends IBlueprintMutatablePart {
+    /** Id of the part from the gateway if this part does not map directly to an IngestPart. This must be unique for each part */
+    externalId: string;
     /**
      * When something bad has happened, we can mark the part as invalid, which will prevent the user from TAKEing it.
      * Situations where a part can be marked as invalid include:
@@ -146,8 +155,6 @@ export interface IBlueprintPart {
     gap?: boolean;
     /** User-facing identifier that can be used by the User to identify the contents of a segment in the Rundown source system */
     identifier?: string;
-    /** Whether queued adlibs can be combined into this part. Usually set by core. */
-    canCombineQueue?: boolean;
 }
 /** The Part sent from Core */
 export interface IBlueprintPartDB extends IBlueprintPart {

@@ -1,9 +1,9 @@
 import { IBlueprintAsRunLogEvent } from './asRunLog';
 import { ConfigItemValue } from './common';
-import { IngestPart, IngestRundown } from './ingest';
+import { IngestPart, ExtendedIngestRundown } from './ingest';
 import { IBlueprintExternalMessageQueueObj } from './message';
 import { OmitId } from './lib';
-import { BlueprintRuntimeArguments, IBlueprintPart, IBlueprintPartDB, IBlueprintPartInstance, IBlueprintPiece, IBlueprintPieceInstance, IBlueprintResolvedPieceInstance, IBlueprintRundownDB, IBlueprintSegmentDB } from './rundown';
+import { BlueprintRuntimeArguments, IBlueprintPart, IBlueprintPartDB, IBlueprintPartInstance, IBlueprintPiece, IBlueprintPieceInstance, IBlueprintResolvedPieceInstance, IBlueprintRundownDB, IBlueprintSegmentDB, IBlueprintMutatablePart } from './rundown';
 import { BlueprintMappings } from './studio';
 /** Common */
 export interface ICommonContext {
@@ -73,15 +73,21 @@ export interface ActionExecutionContext extends ShowStyleContext {
     /** Creative actions */
     /** Insert a piece. Returns id of new PieceInstance. Any timelineObjects will have their ids changed, so are not safe to reference from another piece */
     insertPiece(part: 'current' | 'next', piece: IBlueprintPiece): IBlueprintPieceInstance;
-    /** Update a piecesInstances */
+    /** Update a piecesInstance */
     updatePieceInstance(pieceInstanceId: string, piece: Partial<OmitId<IBlueprintPiece>>): IBlueprintPieceInstance;
     /** Insert a queued part to follow the current part */
     queuePart(part: IBlueprintPart, pieces: IBlueprintPiece[]): IBlueprintPartInstance;
+    /** Update a partInstance */
+    updatePartInstance(part: 'current' | 'next', props: Partial<IBlueprintMutatablePart>): void;
     /** Destructive actions */
     /** Stop any piecesInstances on the specified sourceLayers. Returns ids of piecesInstances that were affected */
     stopPiecesOnLayers(sourceLayerIds: string[], timeOffset?: number): string[];
     /** Stop piecesInstances by id. Returns ids of piecesInstances that were removed */
     stopPieceInstances(pieceInstanceIds: string[], timeOffset?: number): string[];
+    /** Remove piecesInstances by id. Returns ids of piecesInstances that were removed */
+    removePieceInstances(part: 'current' | 'next', pieceInstanceIds: string[]): void;
+    /** Set flag to perform take after executing the current action. Returns state of the flag after each call. */
+    takeAfterExecuteAction(take: boolean): boolean;
 }
 /** Events */
 export interface EventContext {
@@ -126,7 +132,7 @@ export interface AsRunEventContext extends RundownContext {
     getPieceInstances(partInstanceId: string): Readonly<IBlueprintPieceInstance[]>;
     /** Ingest Data */
     /** Get the ingest data related to the rundown */
-    getIngestDataForRundown(): Readonly<IngestRundown> | undefined;
+    getIngestDataForRundown(): Readonly<ExtendedIngestRundown> | undefined;
     /** Get the ingest data related to a part */
     getIngestDataForPart(part: Readonly<IBlueprintPartDB>): Readonly<IngestPart> | undefined;
     /** Get the ingest data related to a partInstance */

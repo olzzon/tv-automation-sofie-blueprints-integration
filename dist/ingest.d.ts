@@ -1,3 +1,4 @@
+import { IBlueprintRundownDBData } from './rundown';
 export interface IngestRundown {
     /** Id of the rundown as reported by the ingest gateway. Must be unique for each rundown owned by the gateway */
     externalId: string;
@@ -40,4 +41,8 @@ export interface IngestAdlib {
     payloadType: string;
     /** Raw payload of the adlib. Only used by the blueprints */
     payload?: any;
+}
+/** The IngesteRundown is extended with data from Core */
+export interface ExtendedIngestRundown extends IngestRundown {
+    coreData: IBlueprintRundownDBData | undefined;
 }
