@@ -8,6 +8,10 @@ export interface IBlueprintActionManifestDisplay {
     description?: string;
     _rank?: number;
     tags?: string[];
+    /** Piece tags to use to determine if action is on-air */
+    onAirTags?: string[];
+    /** Piece tags to use to determine if action is set as next */
+    setNextTags?: string[];
 }
 export interface IBlueprintActionManifestDisplayContent extends IBlueprintActionManifestDisplay {
     /** Source layer the timeline item belongs to */
