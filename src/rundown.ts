@@ -214,12 +214,12 @@ export interface IBlueprintPartDBTimings {
 export enum PartHoldMode {
 	NONE = 0,
 	FROM = 1,
-	TO = 2
+	TO = 2,
 }
 
 export declare enum PieceTransitionType {
 	MIX = 'MIX',
-	WIPE = 'WIPE'
+	WIPE = 'WIPE',
 }
 export interface PieceTransition {
 	type: PieceTransitionType
@@ -269,6 +269,8 @@ export interface IBlueprintPieceGeneric {
 	adlibTransitionKeepAlive?: number
 	/** Whether the adlib can be combined with an already queued adlib */
 	canCombineQueue?: boolean
+	/** User-defined tags that can be used for filtering adlibs in the shelf and identifying pieces by actions */
+	tags?: string[]
 }
 
 export interface ExpectedPlayoutItemGeneric {
@@ -323,12 +325,14 @@ export interface IBlueprintAdLibPiece extends IBlueprintPieceGeneric {
 	invalid?: boolean
 	/** Expected duration of the piece, in milliseconds */
 	expectedDuration?: number
-	/** User-defined tags that can be used for filtering in the Rundown Layouts without modifying the label */
-	tags?: string[]
 	/** When the NRCS informs us that the producer marked the part as floated, we can prevent the user from TAKE'ing it, but still have it visible and allow manipulation */
 	floated?: boolean
 	/** HACK: Remove when adlib actions are ready. */
 	additionalPieces?: IBlueprintAdLibPiece[]
+	/** Piece tags to use to determine if adlib is on-air */
+	onAirTags?: string[]
+	/** Piece tags to use to determine if adlib is set as next */
+	setNextTags?: string[]
 }
 /** The AdLib piece sent from Core */
 export interface IBlueprintAdLibPieceDB extends IBlueprintAdLibPiece {
@@ -339,5 +343,5 @@ export enum PieceLifespan {
 	Normal = 0,
 	OutOnNextPart = 1,
 	OutOnNextSegment = 2,
-	Infinite = 3
+	Infinite = 3,
 }
