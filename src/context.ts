@@ -3,7 +3,6 @@ import { IngestPart, ExtendedIngestRundown } from './ingest'
 import { IBlueprintExternalMessageQueueObj } from './message'
 import { OmitId } from './lib'
 import {
-	BlueprintRuntimeArguments,
 	IBlueprintPart,
 	IBlueprintPartDB,
 	IBlueprintPartInstance,
@@ -66,8 +65,6 @@ export interface RundownContext extends ShowStyleContext {
 }
 
 export interface SegmentContext extends RundownContext {
-	getRuntimeArguments: (externalId: string) => Readonly<BlueprintRuntimeArguments> | undefined
-
 	error: (message: string, partExternalId?: string) => void
 	warning: (message: string, partExternalId?: string) => void
 }
