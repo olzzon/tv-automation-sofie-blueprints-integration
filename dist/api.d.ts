@@ -47,7 +47,7 @@ export interface StudioBlueprintManifest extends BlueprintManifestBase {
     /** Returns information about the playlist this rundown is a part of, return null to not make it a part of a playlist */
     getRundownPlaylistInfo?: (rundowns: IBlueprintRundownDB[]) => BlueprintResultRundownPlaylist | null;
     /** Process config before storing it by core to later be returned by context's getShowStyleConfig */
-    parseConfig?: (config: IBlueprintConfig) => any;
+    parseConfig?: (config: IBlueprintConfig) => unknown;
 }
 export interface ShowStyleBlueprintManifest extends BlueprintManifestBase {
     blueprintType: BlueprintManifestType.SHOWSTYLE;
@@ -66,7 +66,7 @@ export interface ShowStyleBlueprintManifest extends BlueprintManifestBase {
     /** Generate adlib piece from ingest data */
     getAdlibItem?: (context: ShowStyleContext, ingestItem: IngestAdlib) => IBlueprintAdLibPiece | null;
     /** Process config before storing it by core to later be returned by context's getShowStyleConfig */
-    parseConfig?: (config: IBlueprintConfig) => any;
+    parseConfig?: (config: IBlueprintConfig) => unknown;
     onRundownActivate?: (context: EventContext & RundownContext) => Promise<void>;
     onRundownFirstTake?: (context: EventContext & PartEventContext) => Promise<void>;
     onRundownDeActivate?: (context: EventContext & RundownContext) => Promise<void>;
