@@ -8,9 +8,10 @@ var PartHoldMode;
 })(PartHoldMode = exports.PartHoldMode || (exports.PartHoldMode = {}));
 var PieceLifespan;
 (function (PieceLifespan) {
-    PieceLifespan[PieceLifespan["Normal"] = 0] = "Normal";
-    PieceLifespan[PieceLifespan["OutOnNextPart"] = 1] = "OutOnNextPart";
-    PieceLifespan[PieceLifespan["OutOnNextSegment"] = 2] = "OutOnNextSegment";
-    PieceLifespan[PieceLifespan["Infinite"] = 3] = "Infinite";
+    PieceLifespan["WithinPart"] = "part-only";
+    PieceLifespan["OutOnSegmentChange"] = "segment-change";
+    PieceLifespan["OutOnSegmentEnd"] = "segment-end";
+    PieceLifespan["OutOnRundownChange"] = "rundown-change";
+    PieceLifespan["OutOnRundownEnd"] = "rundown-end";
 })(PieceLifespan = exports.PieceLifespan || (exports.PieceLifespan = {}));
 //# sourceMappingURL=rundown.js.map

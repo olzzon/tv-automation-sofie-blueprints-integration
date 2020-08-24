@@ -1,4 +1,4 @@
-import { IBlueprintPartInstance, IBlueprintPiece } from './rundown';
+import { IBlueprintPartInstance, IBlueprintPieceInstance } from './rundown';
 import * as TSR from 'timeline-state-resolver-types';
 import { CombineArrayType } from './lib';
 export { TSR };
@@ -10,9 +10,9 @@ export declare enum PlayoutTimelinePrefixes {
     PIECE_GROUP_FIRST_ITEM_PREFIX = "piece_group_firstobject_"
 }
 export declare function getPartGroupId(part: IBlueprintPartInstance | string): string;
-export declare function getPieceGroupId(piece: IBlueprintPiece | string): string;
+export declare function getPieceGroupId(piece: IBlueprintPieceInstance | string): string;
 export declare function getPartFirstObjectId(part: IBlueprintPartInstance | string): string;
-export declare function getPieceFirstObjectId(piece: IBlueprintPiece | string): string;
+export declare function getPieceFirstObjectId(piece: IBlueprintPieceInstance | string): string;
 export declare enum TimelineObjHoldMode {
     NORMAL = 0,
     ONLY = 1,
