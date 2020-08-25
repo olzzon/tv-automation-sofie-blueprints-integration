@@ -3,7 +3,7 @@ import { ConfigItemValue } from './common';
 import { IngestPart, ExtendedIngestRundown } from './ingest';
 import { IBlueprintExternalMessageQueueObj } from './message';
 import { OmitId } from './lib';
-import { BlueprintRuntimeArguments, IBlueprintPart, IBlueprintPartDB, IBlueprintPartInstance, IBlueprintPiece, IBlueprintPieceInstance, IBlueprintResolvedPieceInstance, IBlueprintRundownDB, IBlueprintSegmentDB, IBlueprintMutatablePart } from './rundown';
+import { IBlueprintPart, IBlueprintPartDB, IBlueprintPartInstance, IBlueprintPiece, IBlueprintPieceInstance, IBlueprintResolvedPieceInstance, IBlueprintRundownDB, IBlueprintSegmentDB, IBlueprintMutatablePart } from './rundown';
 import { BlueprintMappings } from './studio';
 /** Common */
 export interface ICommonContext {
@@ -50,7 +50,6 @@ export interface RundownContext extends ShowStyleContext {
     readonly rundown: Readonly<IBlueprintRundownDB>;
 }
 export interface SegmentContext extends RundownContext {
-    getRuntimeArguments: (externalId: string) => Readonly<BlueprintRuntimeArguments> | undefined;
     error: (message: string, partExternalId?: string) => void;
     warning: (message: string, partExternalId?: string) => void;
 }
