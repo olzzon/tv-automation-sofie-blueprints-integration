@@ -250,8 +250,6 @@ export interface IBlueprintPieceGeneric {
 	adlibDisableOutTransition?: boolean
 	/** When queued, how long to keep the old part alive */
 	adlibTransitionKeepAlive?: number
-	/** Whether the adlib can be combined with an already queued adlib */
-	canCombineQueue?: boolean
 	/** User-defined tags that can be used for filtering adlibs in the shelf and identifying pieces by actions */
 	tags?: string[]
 }
