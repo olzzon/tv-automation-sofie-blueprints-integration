@@ -8,6 +8,7 @@ import { MigrationStep } from './migrations';
 import { IBlueprintAdLibPiece, IBlueprintPart, IBlueprintPiece, IBlueprintResolvedPieceInstance, IBlueprintRundown, IBlueprintRundownPlaylistInfo, IBlueprintSegment, IBlueprintRundownDB } from './rundown';
 import { IBlueprintShowStyleBase, IBlueprintShowStyleVariant } from './showStyle';
 import { OnGenerateTimelineObj } from './timeline';
+import { IBlueprintConfig } from './common';
 export declare enum BlueprintManifestType {
     SYSTEM = "system",
     STUDIO = "studio",
@@ -45,6 +46,8 @@ export interface StudioBlueprintManifest extends BlueprintManifestBase {
     getShowStyleId: (context: IStudioConfigContext, showStyles: IBlueprintShowStyleBase[], ingestRundown: ExtendedIngestRundown) => string | null;
     /** Returns information about the playlist this rundown is a part of, return null to not make it a part of a playlist */
     getRundownPlaylistInfo?: (rundowns: IBlueprintRundownDB[]) => BlueprintResultRundownPlaylist | null;
+    /** Preprocess config before storing it by core to later be returned by context's getStudioConfig. If not provided, getStudioConfig will return unprocessed blueprint config */
+    preprocessConfig?: (config: IBlueprintConfig) => unknown;
 }
 export interface ShowStyleBlueprintManifest extends BlueprintManifestBase {
     blueprintType: BlueprintManifestType.SHOWSTYLE;
@@ -62,6 +65,8 @@ export interface ShowStyleBlueprintManifest extends BlueprintManifestBase {
     executeAction?: (context: EventContext & ActionExecutionContext, actionId: string, userData: ActionUserData) => void;
     /** Generate adlib piece from ingest data */
     getAdlibItem?: (context: ShowStyleContext, ingestItem: IngestAdlib) => IBlueprintAdLibPiece | null;
+    /** Preprocess config before storing it by core to later be returned by context's getShowStyleConfig. If not provided, getShowStyleConfig will return unprocessed blueprint config */
+    preprocessConfig?: (config: IBlueprintConfig) => unknown;
     onRundownActivate?: (context: EventContext & RundownContext) => Promise<void>;
     onRundownFirstTake?: (context: EventContext & PartEventContext) => Promise<void>;
     onRundownDeActivate?: (context: EventContext & RundownContext) => Promise<void>;
