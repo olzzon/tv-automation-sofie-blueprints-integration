@@ -80,6 +80,7 @@ export interface GraphicsContent extends BaseContent {
     templateData?: object;
     metadata?: MetadataElement[];
     timelineObjects: TimelineObjectCoreExt[];
+    ignoreMediaObjectStatus?: boolean;
 }
 export interface NoraPayload {
     content: {
