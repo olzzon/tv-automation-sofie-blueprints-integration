@@ -18,5 +18,6 @@ var SourceLayerType;
     SourceLayerType[SourceLayerType["MIC"] = 12] = "MIC";
     SourceLayerType[SourceLayerType["TRANSITION"] = 13] = "TRANSITION";
     SourceLayerType[SourceLayerType["LIGHTS"] = 14] = "LIGHTS";
+    SourceLayerType[SourceLayerType["LOCAL"] = 15] = "LOCAL";
 })(SourceLayerType = exports.SourceLayerType || (exports.SourceLayerType = {}));
 //# sourceMappingURL=content.js.map
