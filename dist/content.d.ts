@@ -16,7 +16,8 @@ export declare enum SourceLayerType {
     LIVE_SPEAK = 11,
     MIC = 12,
     TRANSITION = 13,
-    LIGHTS = 14
+    LIGHTS = 14,
+    LOCAL = 15
 }
 export interface MetadataElement {
     _id: string;
