@@ -80,6 +80,8 @@ export interface IBlueprintMutatablePart {
     disableOutTransition?: boolean;
     /** Expected duration of the line, in milliseconds */
     expectedDuration?: number;
+    /** Budget duration of this Part, in milliseconds */
+    budgetDuration?: number;
     /** Whether this segment line supports being used in HOLD */
     holdMode?: PartHoldMode;
     /** Set to true if ingest-device should be notified when this part starts playing */
