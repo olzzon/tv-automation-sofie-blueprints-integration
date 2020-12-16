@@ -91,7 +91,7 @@
     "*.{js,css,json,md,scss}": [
       "prettier --write"
     ],
-    "*.{ts,tsx}": [
+    "src/*.{ts,tsx}": [
       "npm run lint --fix"
     ]
   }

@@ -23,9 +23,7 @@ export interface IBlueprintRundown {
     /** Expected duration of the rundown */
     expectedDuration?: number;
     /** Arbitrary data storage for plugins */
-    metaData?: {
-        [key: string]: any;
-    };
+    metaData?: unknown;
     /** A hint to the Core that the Rundown should be a part of a playlist */
     playlistExternalId?: string;
 }
@@ -49,9 +47,7 @@ export interface IBlueprintSegment {
     /** User-presentable name (Slug) for the Title */
     name: string;
     /** Arbitrary data storage for plugins */
-    metaData?: {
-        [key: string]: any;
-    };
+    metaData?: unknown;
     /** Hide the Segment in the UI */
     isHidden?: boolean;
     /** User-facing identifier that can be used by the User to identify the contents of a segment in the Rundown source system */
@@ -61,9 +57,8 @@ export interface IBlueprintSegment {
 export interface IBlueprintSegmentDB extends IBlueprintSegment {
     _id: string;
 }
-export interface PartMetaData {
-    [key: string]: any;
-}
+/** @deprecated Use unknown instead */
+export declare type PartMetaData = unknown;
 export interface IBlueprintMutatablePart {
     /** The story title */
     title: string;
@@ -146,8 +141,6 @@ export interface IBlueprintPartDB extends IBlueprintPart {
     _id: string;
     /** The segment ("Title") this line belongs to */
     segmentId: string;
-    /** Playout timings, in here we log times when playout happens */
-    timings?: IBlueprintPartDBTimings;
     /** if the part was dunamically inserted (adlib) */
     dynamicallyInsertedAfterPartId?: string;
 }
@@ -158,19 +151,19 @@ export interface IBlueprintPartInstance {
     segmentId: string;
     part: IBlueprintPartDB;
 }
-export interface IBlueprintPartDBTimings {
+export interface IBlueprintPartInstanceTimings {
     /** Point in time the Part was taken, (ie the time of the user action) */
-    take: Time[];
+    take?: Time;
     /** Point in time the "take" action has finished executing */
-    takeDone: Time[];
+    takeDone?: Time;
     /** Point in time the Part started playing (ie the time of the playout) */
-    startedPlayback: Time[];
+    startedPlayback?: Time;
     /** Point in time the Part stopped playing (ie the time of the user action) */
-    takeOut: Time[];
+    takeOut?: Time;
     /** Point in time the Part stopped playing (ie the time of the playout) */
-    stoppedPlayback: Time[];
+    stoppedPlayback?: Time;
     /** Point in time the Part was set as Next (ie the time of the user action) */
-    next: Time[];
+    next?: Time;
 }
 export declare enum PartHoldMode {
     NONE = 0,
@@ -185,9 +178,8 @@ export interface PieceTransition {
     type: PieceTransitionType;
     duration: number;
 }
-export interface PieceMetaData {
-    [key: string]: any;
-}
+/** @deprecated Use unknown instead */
+export declare type PieceMetaData = unknown;
 export interface IBlueprintPieceGeneric {
     /** ID of the source object in the gateway */
     externalId: string;
@@ -251,9 +243,6 @@ export interface IBlueprintPiece extends IBlueprintPieceGeneric {
 }
 export interface IBlueprintPieceDB extends IBlueprintPiece {
     _id: string;
-    playoutDuration?: number;
-    /** This is the id of the original segment of an infinite piece chain. If it matches the id of itself then it is the first in the chain */
-    infiniteId?: string;
 }
 export interface IBlueprintPieceInstance {
     _id: string;
@@ -272,10 +261,10 @@ export interface IBlueprintAdLibPiece extends IBlueprintPieceGeneric {
     expectedDuration?: number;
     /** When the NRCS informs us that the producer marked the part as floated, we can prevent the user from TAKE'ing it, but still have it visible and allow manipulation */
     floated?: boolean;
-    /** Piece tags to use to determine if adlib is on-air */
-    onAirTags?: string[];
-    /** Piece tags to use to determine if adlib is set as next */
-    setNextTags?: string[];
+    /** Piece tags to use to determine if action is currently active */
+    currentPieceTags?: string[];
+    /** Piece tags to use to determine if action is set as next */
+    nextPieceTags?: string[];
 }
 /** The AdLib piece sent from Core */
 export interface IBlueprintAdLibPieceDB extends IBlueprintAdLibPiece {

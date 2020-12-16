@@ -82,10 +82,16 @@ export interface ActionExecutionContext extends ShowStyleContext {
     removePieceInstances(part: 'current' | 'next', pieceInstanceIds: string[]): void;
     /** Set flag to perform take after executing the current action. Returns state of the flag after each call. */
     takeAfterExecuteAction(take: boolean): boolean;
+    /** Set flag to perform take after executing the current action. Returns state of the flag after each call. */
+    takeAfterExecuteAction(take: boolean): boolean;
 }
 /** Events */
 export interface EventContext {
     getCurrentTime(): number;
+}
+export interface TimelineEventContext extends EventContext, RundownContext {
+    readonly currentPartInstance: Readonly<IBlueprintPartInstance> | undefined;
+    readonly nextPartInstance: Readonly<IBlueprintPartInstance> | undefined;
 }
 export interface PartEventContext extends EventContext, RundownContext {
     readonly part: Readonly<IBlueprintPartInstance>;

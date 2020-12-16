@@ -1,7 +1,7 @@
 import { TSRTimelineObjBase } from 'timeline-state-resolver-types';
 import { ActionUserData, IBlueprintActionManifest } from './action';
 import { ConfigManifestEntry } from './config';
-import { ActionExecutionContext, AsRunEventContext, EventContext, IStudioConfigContext, IStudioContext, PartEventContext, RundownContext, SegmentContext, ShowStyleContext } from './context';
+import { ActionExecutionContext, AsRunEventContext, EventContext, IStudioConfigContext, IStudioContext, PartEventContext, RundownContext, SegmentContext, ShowStyleContext, TimelineEventContext } from './context';
 import { IngestAdlib, ExtendedIngestRundown, IngestSegment } from './ingest';
 import { IBlueprintExternalMessageQueueObj } from './message';
 import { MigrationStep } from './migrations';
@@ -74,18 +74,14 @@ export interface ShowStyleBlueprintManifest extends BlueprintManifestBase {
     onPreTake?: (context: EventContext & PartEventContext) => Promise<void>;
     onPostTake?: (context: EventContext & PartEventContext) => Promise<void>;
     /** Called after the timeline has been generated, used to manipulate the timeline */
-    onTimelineGenerate?: (context: PartEventContext, timeline: OnGenerateTimelineObj[], previousPersistentState: TimelinePersistentState | undefined, previousPartEndState: PartEndState | undefined, resolvedPieces: IBlueprintResolvedPieceInstance[]) => Promise<BlueprintResultTimeline>;
+    onTimelineGenerate?: (context: TimelineEventContext, timeline: OnGenerateTimelineObj[], previousPersistentState: TimelinePersistentState | undefined, previousPartEndState: PartEndState | undefined, resolvedPieces: IBlueprintResolvedPieceInstance[]) => Promise<BlueprintResultTimeline>;
     /** Called just before taking the next part. This generates some persisted data used by onTimelineGenerate to modify the timeline based on the previous part (eg, persist audio levels) */
     getEndStateForPart?: (context: RundownContext, previousPersistentState: TimelinePersistentState | undefined, previousPartEndState: PartEndState | undefined, resolvedPieces: IBlueprintResolvedPieceInstance[], time: number) => PartEndState;
     /** Called after an as-run event is created */
     onAsRunEvent?: (context: EventContext & AsRunEventContext) => Promise<IBlueprintExternalMessageQueueObj[]>;
 }
-export interface PartEndState {
-    [key: string]: any;
-}
-export interface TimelinePersistentState {
-    [key: string]: any;
-}
+export declare type PartEndState = unknown;
+export declare type TimelinePersistentState = unknown;
 export interface BlueprintResultTimeline {
     timeline: OnGenerateTimelineObj[];
     persistentState: TimelinePersistentState;
