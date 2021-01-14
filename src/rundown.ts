@@ -304,6 +304,8 @@ export interface IBlueprintAdLibPiece extends IBlueprintPieceGeneric {
 	currentPieceTags?: string[]
 	/** Piece tags to use to determine if action is set as next */
 	nextPieceTags?: string[]
+	/** Can be used by the UI to filter out identical AdLibs repeated across multiple segments */
+	uniquenessId?: string
 }
 /** The AdLib piece sent from Core */
 export interface IBlueprintAdLibPieceDB extends IBlueprintAdLibPiece {
